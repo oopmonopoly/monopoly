@@ -1,0 +1,127 @@
+package monopl;
+import java.applet.Applet;
+import java.awt.event.*;
+import java.awt.image.*;
+import java.lang.*;
+import java.util.*;
+import java.net.*;
+import java.awt.*;
+import java.io.*;
+
+public class player {
+	public String Name;
+	public int Money = 1000;
+	public int Position = 0;
+	public int PlayerNum;
+	public boolean inPrison = false;
+	public int turns = 0;
+	private Label player;
+	public int placement[][] = {
+		//Positions for the player as he travels around the board
+		{ 10, 450 },
+		{ 10, 369 },
+		{ 10, 336 },
+		{ 10, 303 },
+		{ 10, 269 },
+		{ 10, 236 },
+		{ 10, 203 },
+		{ 10, 169 },
+		{ 10, 136 },
+		{ 10, 103 },
+		{ 10, 10  },
+		
+		{ 103, 10 },
+		{ 136, 10 },
+		{ 169, 10 },
+		{ 203, 10 },
+		{ 236, 10 },
+		{ 269, 10 },
+		{ 303, 10 },
+		{ 336, 10 },
+		{ 369, 10 },
+		{ 426, 10 },
+		
+		{ 426, 103 },
+		{ 426, 136 },
+		{ 426, 169 },
+		{ 426, 203 },
+		{ 426, 236 },
+		{ 426, 269 },
+		{ 426, 303 },
+		{ 426, 336 },
+		{ 426, 369 },
+		{ 426, 403 },
+		
+		{ 369, 426 },
+		{ 336, 426 },
+		{ 303, 426 },
+		{ 269, 426 },
+		{ 236, 426 },
+		{ 203, 426 },
+		{ 169, 426 },
+		{ 136, 426 },
+		{ 103, 426 }};
+	
+	public player( String name, int num ) {
+		Name = name;
+		PlayerNum = num;
+	}
+	//Make the move
+	public void Move( int numSpaces, boolean doubles, manager pm ) {
+		if( (inPrison && doubles) || !inPrison ){
+			inPrison = false;
+			Position += numSpaces;
+			if( Position > 39 || Position == 0 )
+				Money += 200;
+		}
+		else if( inPrison )
+			turns++;
+		if( !inPrison )
+			turns = 0;
+		if( turns == 2 ) {
+			inPrison = false;
+			turns = 0;
+			Money -= 50;
+			pm.Properties[20][1] += 50;
+		}
+		Position %= 40;
+	}
+	public void DrawPlayer( Graphics g ) {
+		//Draw the player according to the position on the board
+		int y;
+		if( PlayerNum == 1 ) {
+			y = 20;
+			g.setColor( Color.blue );
+			if( inPrison )
+				g.fillRect( 34, 34, 20, 15 );
+			else
+				g.fillRect( placement[Position][0],placement[Position][1],20, 15 );
+		if (PlayerNum == 1) {
+			g.setFont( new Font( "Arial", Font.BOLD, 16 ) );
+			FontMetrics fm = g.getFontMetrics();
+			int w = fm.stringWidth(Name);
+			g.drawString( Name, 500, y );
+			w = fm.stringWidth("$"+Money);
+			g.drawString( "$" + Money, 500, y+20 );
+			}
+		}
+		else {
+			y = 70;
+			g.setColor( Color.red );
+			if( inPrison )
+				g.fillRect( 39, 39, 20, 15 );
+			else
+				g.fillRect( placement[Position][0]+9,placement[Position][1]+9,20, 15 );
+			if (PlayerNum == 2) {
+				g.setFont( new Font( "Arial", Font.BOLD, 16 ) );
+				FontMetrics fm = g.getFontMetrics();
+				int w = fm.stringWidth(Name);
+				g.drawString( Name, 500, y );
+				w = fm.stringWidth("$"+Money);
+				g.drawString( "$" + Money, 500, y+20 );
+			}
+		}
+	}
+
+}
+
