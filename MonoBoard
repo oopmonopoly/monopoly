@@ -1,0 +1,147 @@
+package monopl;
+
+import java.applet.Applet;  
+import java.awt.event.*;
+import java.awt.*; 
+
+@SuppressWarnings("serial")
+public class monoboard extends Applet implements ActionListener, WindowListener {
+	static Frame mainF = new Frame( " Monopoly Game" );
+	static board Board;
+	static player Player;
+	static final  Panel boardpan = new  Panel();
+	static final Container contPan = new Container();
+	static final Frame frm = new Frame();
+	static manager Manager;
+	private Button Roll  = new Button( "Dice" );
+	private Button Buy   = new Button( "Buy Property" );
+	private Button Add   = new Button( "Add a House" );
+	private Button Rem   = new Button( "Sell a House" );
+	private Button New   = new Button( "New Game" );
+	private Button Done  = new Button( "Done" );
+	private Button pay50 = new Button( "Exit from Prison" );
+	static final TextField tplayer1 = new TextField("P1");
+	static final TextField tplayer2 = new TextField("P2");
+	static final Button begingame = new Button( "Start Game" );	 
+	static final Button quit = new Button ("Exit");	 
+	static final Label titl = new Label ("          Monopoly Game\n\n  " );	 
+	int Money = 1000;	
+   public static void main(String arg[]) 
+   {
+    new monoboard();
+
+   }
+	public void init() {
+		frm.setSize( 380, 300 );
+		frm.setBackground(new Color( (200), (200), (100) ));
+		frm.setLayout(new FlowLayout(FlowLayout.CENTER));
+		frm.setResizable(false);
+		Panel panel1 = new Panel(new GridLayout(0,1));
+		panel1.add(titl);		 
+		panel1.add( tplayer1);
+		panel1.add(tplayer2);
+		panel1.add( begingame );
+		panel1.add(quit);
+		frm.add(panel1);
+		frm.setVisible( true );
+		quit.addActionListener(this);
+		begingame.addActionListener( this );
+		mainF.addWindowListener( this );
+	}
+	 
+	public void actionPerformed( ActionEvent e ) {
+	if (e.getSource() == quit){
+	    frm.setVisible(false);    
+	    } 
+	    
+	if (e.getSource() == begingame)
+	{
+		 
+		frm.setVisible( false );
+		Board = new board( tplayer1.getText(), tplayer2.getText() );
+		boardpan.setLayout( new BorderLayout() );
+		contPan.setLayout( new BorderLayout() );	
+		mainF.setSize( 800,700 );
+		mainF.setBackground(new Color( (200), (200), (200) ) );  
+		 mainF.setLayout( new FlowLayout(FlowLayout.LEFT));
+		 contPan.add( Board);
+		boardpan.add( "Center", contPan );
+		mainF.add(boardpan );
+		Panel buttons = new Panel(new GridLayout(0,3));
+								
+				buttons.add(Roll);
+				Roll.addActionListener(new ActionListener() {
+					public void actionPerformed( ActionEvent e ) {
+							if( !Board.rolled ) {
+								Board.Roll();
+							}
+					}});
+				
+				
+				
+				
+				
+				
+				buttons.add(Done);
+				Done.addActionListener(new ActionListener() {
+					public void actionPerformed( ActionEvent e ) {
+						if( Board.rolled ) {
+								Board.rolled = false;
+								Board.turn = !Board.turn;
+								repaint();
+							}
+						}});
+
+				buttons.add(Buy);
+				Buy.addActionListener(new ActionListener() {
+					public void actionPerformed( ActionEvent e ) {
+						Board.Buy();
+					}});
+				buttons.add(Add);
+				Add.addActionListener(new ActionListener() {
+					public void actionPerformed( ActionEvent e ) {
+						Board.Add();
+					}});
+				buttons.add(Rem);
+				Rem.addActionListener(new ActionListener() {
+					public void actionPerformed( ActionEvent e ) {
+						Board.Rem();
+					}});
+				buttons.add(New);
+				New.addActionListener(new ActionListener() {
+					public void actionPerformed( ActionEvent e ) {
+						Board.New();
+					}});
+				buttons.add(pay50);
+				pay50.addActionListener(new ActionListener() {
+					public void actionPerformed( ActionEvent e ) {
+						Board.pay50();
+					}});			
+		mainF.add(buttons);
+		mainF.setVisible( true );
+		}
+	}
+	 
+
+	public void windowClosing( WindowEvent e ) {
+		System.exit( 0 );
+	}
+	public void windowIconified( WindowEvent e ) {}
+	public void windowClosed( WindowEvent e ) {}
+	public void windowActivated( WindowEvent e ) {}
+	public void windowDeactivated( WindowEvent e ) {}
+	public void windowDeiconified( WindowEvent e ) {}
+	public void windowOpened( WindowEvent e ) {}
+	public void processKeyEvent (KeyEvent e) {
+		if( e.getKeyChar() =='q' || e.getKeyChar() == 'Q'){
+		    mainF.setVisible (false);
+		    System.exit(0);}
+		}
+}
+
+
+
+
+
+
+
